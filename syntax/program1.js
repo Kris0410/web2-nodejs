@@ -1,6 +1,12 @@
+var args = process.argv;
+console.log(args[2]);
+// args.forEach(arg => {
+//     console.log(arg);
+// });
+
 console.log('A');
 console.log('B');
-if(true){
+if(args[2] === '1'){
     console.log('C1');
 }
 else{
