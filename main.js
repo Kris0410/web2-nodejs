@@ -5,45 +5,42 @@ var url = require('url');
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
+    var pathName = url.parse(_url, true).pathname;
     var title = queryData.id;
-    // console.log(queryData);
-    if(_url == '/'){
-      // _url = '/index.html';
-      title = 'Welcome'
+
+    console.log(pathName);
+    if(pathName === '/'){
+      fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+        var template = `
+      <!doctype html>
+      <html>
+      <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <h1><a href="/">WEB</a></h1>
+        <ol>
+          <li><a href="/?id=HTML">HTML</a></li>
+          <li><a href="/?id=CSS">CSS</a></li>
+          <li><a href="/?id=JavaScript">JavaScript</a></li>
+        </ol>
+        <h2>${title}</h2>
+        <p>
+        ${description}
+        </p>
+      </body>
+      </html>
+      `
+      // response.end(fs.readFileSync(__dirname + _url));
+      // response.end(queryData.id);
+      response.writeHead(200); // 200 파일 전송 성공
+      response.end(template);
+      });
+    } else{
+      response.writeHead(404); // 404 파일을 찾을 수 없는 경우
+      response.end('Not found');
     }
-    if(_url == '/favicon.ico'){
-    //   return response.writeHead(404);
-      response.writeHead(404);
-      response.end();
-      return;
-    }
-    response.writeHead(200);
-    fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
-      var template = `
-    <!doctype html>
-    <html>
-    <head>
-      <title>WEB1 - ${title}</title>
-      <meta charset="utf-8">
-    </head>
-    <body>
-      <h1><a href="/">WEB</a></h1>
-      <ol>
-        <li><a href="/?id=HTML">HTML</a></li>
-        <li><a href="/?id=CSS">CSS</a></li>
-        <li><a href="/?id=JavaScript">JavaScript</a></li>
-      </ol>
-      <h2>${title}</h2>
-      <p>
-      ${description}
-      </p>
-    </body>
-    </html>
-    `
-    // response.end(fs.readFileSync(__dirname + _url));
-    // response.end(queryData.id);
-    response.end(template);
-    });
-    
+
 });
 app.listen(3000);
