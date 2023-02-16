@@ -6,37 +6,69 @@ var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
     var pathName = url.parse(_url, true).pathname;
-    var title = queryData.id;
 
-    console.log(pathName);
+    // console.log(pathName);
     if(pathName === '/'){
-      fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
-        var template = `
-      <!doctype html>
-      <html>
-      <head>
-        <title>WEB1 - ${title}</title>
-        <meta charset="utf-8">
-      </head>
-      <body>
-        <h1><a href="/">WEB</a></h1>
-        <ol>
-          <li><a href="/?id=HTML">HTML</a></li>
-          <li><a href="/?id=CSS">CSS</a></li>
-          <li><a href="/?id=JavaScript">JavaScript</a></li>
-        </ol>
-        <h2>${title}</h2>
-        <p>
-        ${description}
-        </p>
-      </body>
-      </html>
-      `
-      // response.end(fs.readFileSync(__dirname + _url));
-      // response.end(queryData.id);
-      response.writeHead(200); // 200 파일 전송 성공
-      response.end(template);
-      });
+      if(queryData.id == undefined){
+        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+          var title = 'Welcome';
+          var description = 'Hello, Node.js';
+          var template = `
+        <!doctype html>
+        <html>
+        <head>
+          <title>WEB1 - ${title}</title>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <h1><a href="/">WEB</a></h1>
+          <ol>
+            <li><a href="/?id=HTML">HTML</a></li>
+            <li><a href="/?id=CSS">CSS</a></li>
+            <li><a href="/?id=JavaScript">JavaScript</a></li>
+          </ol>
+          <h2>${title}</h2>
+          <p>
+          ${description}
+          </p>
+        </body>
+        </html>
+        `
+        // response.end(fs.readFileSync(__dirname + _url));
+        // response.end(queryData.id);
+        response.writeHead(200); // 200 파일 전송 성공
+        response.end(template);
+        });
+      } else{
+        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+          var title = queryData.id;
+          var template = `
+        <!doctype html>
+        <html>
+        <head>
+          <title>WEB1 - ${title}</title>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <h1><a href="/">WEB</a></h1>
+          <ol>
+            <li><a href="/?id=HTML">HTML</a></li>
+            <li><a href="/?id=CSS">CSS</a></li>
+            <li><a href="/?id=JavaScript">JavaScript</a></li>
+          </ol>
+          <h2>${title}</h2>
+          <p>
+          ${description}
+          </p>
+        </body>
+        </html>
+        `
+        // response.end(fs.readFileSync(__dirname + _url));
+        // response.end(queryData.id);
+        response.writeHead(200); // 200 파일 전송 성공
+        response.end(template);
+        });
+      }
     } else{
       response.writeHead(404); // 404 파일을 찾을 수 없는 경우
       response.end('Not found');
